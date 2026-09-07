@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Исследование восприятия голоса — СПбГУ</title>
+<style>
+  :root{
+    --ink:#1c2a3a;
+    --paper:#faf8f4;
+    --accent:#7a3b2e;
+    --accent-soft:#eee2d8;
+    --line:#d8cfc0;
+    --muted:#6b6259;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Georgia","Times New Roman",serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:40px 24px 100px;}
+  header.top{
+    border-bottom:2px solid var(--accent);
+    padding-bottom:18px;
+    margin-bottom:30px;
+  }
+  header.top .tag{
+    font-family:Arial,Helvetica,sans-serif;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--muted);
+  }
+  header.top h1{
+    font-size:26px;
+    margin:6px 0 0;
+    font-weight:600;
+  }
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:26px 28px;
+    margin-bottom:24px;
+    box-shadow:0 1px 2px rgba(0,0,0,.03);
+  }
+  .card h2{
+    font-size:18px;
+    margin-top:0;
+    color:var(--accent);
+    border-bottom:1px solid var(--accent-soft);
+    padding-bottom:8px;
+  }
+  .card p{margin:10px 0;}
+  .muted{color:var(--muted);font-size:14px;}
+  .field{margin:16px 0;}
+  .field label{display:block;font-weight:600;margin-bottom:6px;font-size:14px;}
+  .field input, .field select, .field textarea{
+    width:100%;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:14px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    background:#fffdfa;
+    color:var(--ink);
+  }
+  .field textarea{min-height:90px;resize:vertical;}
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:none;
+    border-color:var(--accent);
+  }
+  .stim{
+    counter-increment:stim;
+  }
+  .stim .num{
+    display:inline-block;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:12px;
+    background:var(--accent);
+    color:#fff;
+    padding:2px 9px;
+    border-radius:20px;
+    margin-right:8px;
+  }
+  audio{width:100%;margin:12px 0;}
+  .instr{
+    background:var(--accent-soft);
+    border-left:3px solid var(--accent);
+    padding:10px 14px;
+    font-size:14px;
+    margin:12px 0;
+    border-radius:0 4px 4px 0;
+  }
+  button#submitBtn{
+    display:block;
+    width:100%;
+    padding:16px;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:.02em;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  button#submitBtn:disabled{opacity:.6;cursor:not-allowed;}
+  button#submitBtn:hover:not(:disabled){background:#5f2e24;}
+  .progress{
+    position:sticky;
+    top:0;
+    background:var(--paper);
+    padding:10px 0;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:12px;
+    color:var(--muted);
+    z-index:5;
+  }
+  .progress-bar{height:4px;background:var(--accent-soft);border-radius:2px;overflow:hidden;margin-top:4px;}
+  .progress-bar-fill{height:100%;background:var(--accent);width:0%;transition:width .2s;}
+  #thanks{display:none;text-align:center;padding:60px 0;}
+  #thanks h2{color:var(--accent);}
+  #formArea.hidden{display:none;}
+  .req{color:var(--accent);}
+  footer.bottom{margin-top:40px;font-size:12px;color:var(--muted);text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="tag">СПбГУ · Кафедра фонетики</div>
+    <h1>Как бы вы описали этого человека?</h1>
+  </header>
+
+  <div class="progress">
+    Заполнено: <span id="progressText">0%</span>
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+  </div>
+
+  <div id="formArea">
+
+    <section class="card">
+      <h2>О чём это исследование</h2>
+      <p>Привет! Меня зовут Рита, я магистрантка кафедры фонетики, где мы сейчас изучаем,
+      какое впечатление может сформировать голос о его хозяине. Нас интересует <strong>любая</strong>
+      информация о том, какие образы / ассоциации / впечатления вызывает этот голос. </p>
+      <p class="muted">Участие анонимно. Опрос займёт около 10 минут.</p>
+    </section>
+
+    <section class="card">
+      <h2>Что нужно делать</h2>
+      <p>Вы услышите 12 коротких записей голоса — мужских и женских, по очереди. После каждой напишите
+      <strong>несколько предложений</strong>: каким вам представляется этот человек как личность, какое впечатление
+      складывается о нём только по голосу.</p>
+      <p><strong>Пишите то, что приходит в голову первым</strong> — черты характера, эмоции, ассоциации,
+      предположения о том, что это за человек, чем занимается и как выглядит. 
+      Не нужно описывать сам звук голоса (тембр, высоту, темп) —
+      важно впечатление о человеке, а не о голосе как звуке.</p>
+      <p class="muted">Правильных ответов нет — важно именно ваше личное восприятие.</p>
+    </section>
+
+    <section class="card">
+      <h2>Немного о себе</h2>
+      <div class="field">
+        <label for="age">Возраст <span class="req">*</span></label>
+        <input type="number" id="age" min="14" max="100" required>
+      </div>
+      <div class="field">
+        <label for="gender">Пол <span class="req">*</span></label>
+        <select id="gender" required>
+          <option value="" disabled selected>Выберите вариант</option>
+          <option value="женский">Женский</option>
+          <option value="мужской">Мужской</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Мужские голоса</h2>
+      <p class="muted">Для каждой записи опишите, каким вам кажется этот человек по голосу — 2–4 предложения
+      достаточно.</p>
+
+      <div class="stim">
+        <p><span class="num">1 / 12</span><strong>Голос №1</strong></p>
+        <audio controls src="2malecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_2male" data-col="resp_2male" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+
+      <div class="stim">
+        <p><span class="num">2 / 12</span><strong>Голос №2</strong></p>
+        <audio controls src="3malecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_3male" data-col="resp_3male" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+
+      <div class="stim">
+        <p><span class="num">3 / 12</span><strong>Голос №3</strong></p>
+        <audio controls src="5malecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_5male" data-col="resp_5male" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+
+      <div class="stim">
+        <p><span class="num">4 / 12</span><strong>Голос №4</strong></p>
+        <audio controls src="7malecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_7male" data-col="resp_7male" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+
+      <div class="stim">
+        <p><span class="num">5 / 12</span><strong>Голос №5</strong></p>
+        <audio controls src="20malecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_20male" data-col="resp_20male" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+
+      <div class="stim">
+        <p><span class="num">6 / 12</span><strong>Голос №6</strong></p>
+        <audio controls src="24malecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_24male" data-col="resp_24male" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Женские голоса</h2>
+      <p class="muted">Дальше — женские голоса. Принцип тот же: опишите впечатление о человеке своими словами.</p>
+
+      <div class="stim">
+        <p><span class="num">7 / 12</span><strong>Голос №7</strong></p>
+        <audio controls src="8femalecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_8female" data-col="resp_8female" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+
+      <div class="stim">
+        <p><span class="num">8 / 12</span><strong>Голос №8</strong></p>
+        <audio controls src="9femalecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_9female" data-col="resp_9female" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+
+      <div class="stim">
+        <p><span class="num">9 / 12</span><strong>Голос №9</strong></p>
+        <audio controls src="15femalecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_15female" data-col="resp_15female" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+
+      <div class="stim">
+        <p><span class="num">10 / 12</span><strong>Голос №10</strong></p>
+        <audio controls src="16femalecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_16female" data-col="resp_16female" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+
+      <div class="stim">
+        <p><span class="num">11 / 12</span><strong>Голос №11</strong></p>
+        <audio controls src="18femalecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_18female" data-col="resp_18female" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+
+      <div class="stim">
+        <p><span class="num">12 / 12</span><strong>Голос №12</strong></p>
+        <audio controls src="29femalecombined.wav"></audio>
+        <div class="instr">Каким вам представляется этот человек, судя только по голосу?</div>
+        <div class="field"><textarea id="resp_29female" data-col="resp_29female" placeholder="Ваше впечатление…"></textarea></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Последнее</h2>
+      <div class="field">
+        <label for="extra">Хотите добавить что-то ещё о ком-то из этих людей — то, что не поместилось выше?
+        (необязательно)</label>
+        <textarea id="extra" data-col="extra_comment" placeholder="Необязательно…"></textarea>
+      </div>
+    </section>
+
+    <button id="submitBtn">Отправить ответы</button>
+    <p class="muted" id="errorMsg" style="color:#a33;text-align:center;"></p>
+  </div>
+
+  <div id="thanks">
+    <h2>Спасибо за участие!</h2>
+    <p>Ваши ответы сохранены и очень помогут исследованию. Если вам интересны результаты — можно написать автору
+    напрямую - тг @missspring2014</p>
+  </div>
+
+  <footer class="bottom">СПбГУ · научный руководитель — У.&nbsp;Е.&nbsp;Кочеткова</footer>
+</div>
+
+<script>
+  // ==== НАСТРОЙКА: вставьте сюда URL вашего Google Apps Script веб-приложения ====
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxdS5Cra9kaaWSslj-ksuhVgRXcDZ3xGFidpQcNsqtNzYW4UKci2L0iJL-4NQlJgZxo/exec";
+
+  const textareas = Array.from(document.querySelectorAll('textarea[data-col]'));
+  const requiredTextareas = textareas.filter(t => t.id !== 'extra');
+  const ageInput = document.getElementById('age');
+  const genderInput = document.getElementById('gender');
+  const progressText = document.getElementById('progressText');
+  const progressFill = document.getElementById('progressFill');
+
+  function updateProgress(){
+    const totalFields = requiredTextareas.length + 2; // + age + gender
+    let filled = 0;
+    if (ageInput.value) filled++;
+    if (genderInput.value) filled++;
+    requiredTextareas.forEach(t => { if (t.value.trim().length > 0) filled++; });
+    const pct = Math.round((filled / totalFields) * 100);
+    progressText.textContent = pct + '%';
+    progressFill.style.width = pct + '%';
+  }
+  [ageInput, genderInput, ...textareas].forEach(el => el.addEventListener('input', updateProgress));
+  updateProgress();
+
+  function genParticipantId(){
+    return 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    const errorMsg = document.getElementById('errorMsg');
+    errorMsg.textContent = '';
+
+    if (!ageInput.value || !genderInput.value) {
+      errorMsg.textContent = 'Пожалуйста, укажите возраст и пол.';
+      window.scrollTo({top: 0, behavior:'smooth'});
+      return;
+    }
+    const emptyOne = requiredTextareas.find(t => t.value.trim().length === 0);
+    if (emptyOne) {
+      errorMsg.textContent = 'Пожалуйста, заполните описание для всех 12 голосов — вы пропустили одно из них.';
+      emptyOne.scrollIntoView({behavior:'smooth', block:'center'});
+      emptyOne.focus();
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Отправка…';
+
+    const payload = {
+      timestamp: new Date().toISOString(),
+      participant_id: genParticipantId(),
+      age: ageInput.value,
+      gender: genderInput.value
+    };
+    textareas.forEach(t => { payload[t.dataset.col] = t.value.trim(); });
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'text/plain;charset=utf-8'},
+        body: JSON.stringify(payload)
+      });
+      document.getElementById('formArea').classList.add('hidden');
+      document.querySelector('.progress').style.display = 'none';
+      document.getElementById('thanks').style.display = 'block';
+      window.scrollTo({top:0, behavior:'smooth'});
+    } catch (e) {
+      errorMsg.textContent = 'Не удалось отправить ответы. Проверьте интернет-соединение и попробуйте ещё раз.';
+      btn.disabled = false;
+      btn.textContent = 'Отправить ответы';
+    }
+  });
+</script>
+</body>
+</html>
